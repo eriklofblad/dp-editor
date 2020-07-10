@@ -38,6 +38,7 @@ const TreeBase: React.FC<IProps> = ({
           )
           .map((node) => (
             <TreeBase
+              key={node.path_segment._text}
               activeNode={node}
               level={level + 1}
               childNodes={childNodes.filter(
