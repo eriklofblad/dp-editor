@@ -3,12 +3,15 @@ import { XMLNode } from "./App";
 
 interface IProps {
   childNodes: XMLNode[];
-  title: string;
-  value?: string;
+  activeNode: XMLNode;
   level: number;
 }
 
-const TreeBase: React.FC<IProps> = ({ title, childNodes, value, level }) => {
+const TreeBase: React.FC<IProps> = ({
+  activeNode: { path_segment, parent_path_segment, value },
+  childNodes,
+  level,
+}) => {
   const [open, setOpen] = useState(false);
   const hasChildren = childNodes.length > 0;
   return (
@@ -23,30 +26,26 @@ const TreeBase: React.FC<IProps> = ({ title, childNodes, value, level }) => {
           onClick={() => setOpen(!open)}
         >
           {hasChildren && (open ? "-" : "+")}
-          {title}
+          {path_segment._text.replace(parent_path_segment._text + "\\", "")}
         </td>
-        <td>{value}</td>
+        <td>{value._text}</td>
       </tr>
       {open &&
         hasChildren &&
         childNodes
-          .map((node) => {
-            node.path_segment._text = node.path_segment._text.replace(
-              title + "\\",
-              ""
-            );
-            return node;
-          })
-          .filter((node) => !node.path_segment._text.includes("\\"))
+          .filter(
+            (node) => path_segment._text === node.parent_path_segment._text
+          )
           .map((node) => (
             <TreeBase
-              title={node.path_segment._text}
-              value={node.value._text}
+              activeNode={node}
               level={level + 1}
               childNodes={childNodes.filter(
                 (nd) =>
-                  nd.path_segment._text.startsWith(node.path_segment._text) &&
-                  nd.path_segment._text !== node.path_segment._text
+                  nd.parent_path_segment._text &&
+                  nd.parent_path_segment._text.startsWith(
+                    node.path_segment._text
+                  )
               )}
             />
           ))}
