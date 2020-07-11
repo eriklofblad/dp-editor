@@ -27,8 +27,11 @@ const FileUploader: React.FC<IProps> = ({ setNewData }) => {
   };
 
   return (
-    <div>
-      <input type="file" accept=".xml" onChange={handleFileChosen} />
+    <div style={{ marginBottom: "20px" }}>
+      <input type="file" id="file" accept=".xml" onChange={handleFileChosen} />
+      <label htmlFor="file" className="file-button">
+        Ladda upp en fil
+      </label>
     </div>
   );
 };

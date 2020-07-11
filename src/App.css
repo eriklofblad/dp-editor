@@ -10,3 +10,20 @@ td {
   border-top: 1px solid black;
   padding: 5px;
 }
+
+input[type="file"] {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.file-button {
+  background-color: lightblue;
+  padding: 8px 16px;
+  cursor: pointer;
+  margin-bottom: 15px;
+  border-radius: 5px;
+}
