@@ -18,8 +18,9 @@ const FileUploader: React.FC<IProps> = ({ setNewData }) => {
   };
 
   const handleFileChosen = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("new file chosen");
     if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
+      const file = e.target.files[e.target.files.length - 1];
       fileReader = new FileReader();
       fileReader.onloadend = handleFileRead;
       fileReader.readAsText(file);
