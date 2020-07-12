@@ -7,6 +7,8 @@ interface IProps {
   activeNode: XMLNode;
   level: number;
   startEdit: (node: XMLNode) => void;
+  search: string;
+  foundNodes: XMLNode[];
 }
 
 const TreeBase: React.FC<IProps> = ({
@@ -14,6 +16,8 @@ const TreeBase: React.FC<IProps> = ({
   childNodes,
   level,
   startEdit,
+  search,
+  foundNodes,
 }) => {
   const [open, setOpen] = useState(false);
   const hasChildren = childNodes.length > 0;
@@ -49,19 +53,57 @@ const TreeBase: React.FC<IProps> = ({
           .filter(
             (node) => path_segment._text === node.parent_path_segment._text
           )
+          .filter((node) => {
+            if (search.length < 3) {
+              return true;
+            }
+            let found = false;
+            foundNodes.forEach((fnode) => {
+              if (
+                fnode.path_segment._text.startsWith(
+                  node.path_segment._text + "\\"
+                ) ||
+                fnode.path_segment._text === node.path_segment._text
+              ) {
+                found = true;
+              }
+            });
+            return found;
+          })
           .map((node) => (
             <TreeBase
               key={node.path_segment._text}
               activeNode={node}
               level={level + 1}
-              childNodes={childNodes.filter(
-                (nd) =>
-                  nd.parent_path_segment._text === node.path_segment._text ||
-                  nd.parent_path_segment._text.startsWith(
-                    node.path_segment._text + "\\"
-                  )
-              )}
+              childNodes={childNodes
+                .filter(
+                  (nd) =>
+                    nd.parent_path_segment._text === node.path_segment._text ||
+                    nd.parent_path_segment._text.startsWith(
+                      node.path_segment._text + "\\"
+                    )
+                )
+                .filter((nd) => {
+                  if (search.length < 3) {
+                    return true;
+                  }
+                  let found = false;
+                  foundNodes.forEach((fnode) => {
+                    if (
+                      fnode.path_segment._text.startsWith(
+                        node.path_segment._text
+                      )
+                    ) {
+                      found = true;
+                    }
+                  });
+                  return found;
+                })}
               startEdit={startEdit}
+              foundNodes={foundNodes.filter((nd) =>
+                nd.parent_path_segment._text.startsWith(node.path_segment._text)
+              )}
+              search={search}
             />
           ))}
     </React.Fragment>

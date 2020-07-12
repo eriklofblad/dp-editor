@@ -32,6 +32,8 @@ function App() {
     active: boolean;
     node: XMLNode | null;
   }>({ active: false, node: null });
+  const [search, setSearch] = useState<string>("");
+  const [foundNodes, setFoundNodes] = useState<XMLNode[]>([]);
 
   useEffect(() => {
     setNewData(xmlData);
@@ -64,6 +66,16 @@ function App() {
       )
     );
   };
+
+  useEffect(() => {
+    if (search.length > 2) {
+      setFoundNodes(
+        nodes.filter(
+          (node) => node.value._text && node.value._text.includes(search)
+        )
+      );
+    }
+  }, [search, nodes]);
 
   const startEdit = (node: XMLNode) => {
     setEditing({ active: true, node });
@@ -103,26 +115,73 @@ function App() {
         </div>
         <h3>{dpName}</h3>
         <p>{baseName}</p>
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
         <div style={{ display: "flex" }}>
           <table>
             <tbody>
               {nodes
                 .filter((node) => node.parent_path_segment._text === baseName)
+                .filter((node) => {
+                  if (search.length < 3) {
+                    return true;
+                  }
+
+                  let doesContain = false;
+
+                  foundNodes.forEach((nd) => {
+                    if (
+                      nd.parent_path_segment._text.includes(
+                        node.path_segment._text
+                      )
+                    ) {
+                      doesContain = true;
+                    }
+                  });
+                  return doesContain;
+                })
                 .map((node) => (
                   <TreeBase
                     key={node.path_segment._text}
                     activeNode={node}
-                    childNodes={nodes.filter(
-                      (nd) =>
-                        nd.parent_path_segment._text &&
-                        (nd.parent_path_segment._text ===
-                          node.path_segment._text ||
-                          nd.parent_path_segment._text.startsWith(
-                            node.path_segment._text + "\\"
-                          ))
-                    )}
+                    childNodes={nodes
+                      .filter(
+                        (nd) =>
+                          nd.parent_path_segment._text &&
+                          (nd.parent_path_segment._text ===
+                            node.path_segment._text ||
+                            nd.parent_path_segment._text.startsWith(
+                              node.path_segment._text + "\\"
+                            ))
+                      )
+                      .filter((nd) => {
+                        if (search.length < 3) {
+                          return true;
+                        }
+                        let found = false;
+                        foundNodes.forEach((fnode) => {
+                          if (
+                            fnode.path_segment._text.startsWith(
+                              node.path_segment._text
+                            ) ||
+                            fnode.path_segment._text === node.path_segment._text
+                          ) {
+                            found = true;
+                          }
+                        });
+                        return found;
+                      })}
                     level={1}
                     startEdit={startEdit}
+                    search={search}
+                    foundNodes={foundNodes.filter((nd) =>
+                      nd.parent_path_segment._text.startsWith(
+                        node.path_segment._text
+                      )
+                    )}
                   />
                 ))}
             </tbody>
