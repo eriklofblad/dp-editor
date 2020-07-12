@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import convert, { ElementCompact } from "xml-js";
 import TreeBase from "./TreeBase";
 import FileUploader from "./FileUploader";
 import ExportButton from "./ExportButton";
 import EditValue from "./EditValue";
-
+import { xmlData } from "./test-data/crLungor";
 interface XmlTreeData extends ElementCompact {
   tree?: {
     branch: {
@@ -33,9 +33,9 @@ function App() {
     node: XMLNode | null;
   }>({ active: false, node: null });
 
-  // useEffect(() => {
-  //   setNewData(xmlData);
-  // }, []);
+  useEffect(() => {
+    setNewData(xmlData);
+  }, []);
 
   const setNewData = (data: string): void => {
     const jsonData: XmlTreeData = convert.xml2js(data, { compact: true });

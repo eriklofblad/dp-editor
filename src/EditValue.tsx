@@ -23,7 +23,7 @@ const EditValue: React.FC<IProps> = ({ node, setNodeValue, endEdit }) => {
     endEdit();
   };
   return (
-    <div>
+    <div style={{ marginLeft: "10px" }}>
       <input
         type="text"
         name="value"
@@ -31,8 +31,14 @@ const EditValue: React.FC<IProps> = ({ node, setNodeValue, endEdit }) => {
         onChange={handleChange}
         value={value}
       />
-      <button onClick={handleSave}>Spara</button>
-      <button onClick={endEdit}>Avbryt</button>
+      <div>
+        <button className="file-button" onClick={handleSave}>
+          Spara
+        </button>
+        <button className="file-button" onClick={endEdit}>
+          Avbryt
+        </button>
+      </div>
     </div>
   );
 };
