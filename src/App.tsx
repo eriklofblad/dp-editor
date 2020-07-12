@@ -134,9 +134,10 @@ function App() {
 
                   foundNodes.forEach((nd) => {
                     if (
-                      nd.parent_path_segment._text.includes(
-                        node.path_segment._text
-                      )
+                      nd.path_segment._text.startsWith(
+                        node.path_segment._text + "\\"
+                      ) ||
+                      nd.path_segment._text === node.path_segment._text
                     ) {
                       doesContain = true;
                     }
