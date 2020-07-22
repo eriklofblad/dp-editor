@@ -41,7 +41,6 @@ const ExportButton: React.FC<IProps> = ({ nodes, name, baseName }) => {
         js2xml(data, {
           compact: true,
           fullTagEmptyElement: true,
-          indentAttributes: true,
           spaces: 2,
         }),
       ],
