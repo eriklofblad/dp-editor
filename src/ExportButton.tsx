@@ -37,7 +37,7 @@ const ExportButton: React.FC<IProps> = ({ nodes, name, baseName }) => {
     };
 
     const fileText = new Blob([js2xml(data, { compact: true })], {
-      type: "application/xml",
+      type: "application/xml;charset=utf-8",
     });
 
     saveAs(fileText, `DP_${name.replace(" ", "_")}.xml`);
