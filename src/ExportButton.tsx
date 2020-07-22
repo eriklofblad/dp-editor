@@ -19,13 +19,13 @@ const ExportButton: React.FC<IProps> = ({ nodes, name, baseName }) => {
         },
       },
       _doctype: `tree [
-        <!ELEMENT tree (branch)+>
-        <!ELEMENT branch (node)+>
-        <!ELEMENT node (path_segment,parent_path_segment?,value?)>
-        <!ELEMENT path_segment (#PCDATA)>
-        <!ELEMENT parent_path_segment (#PCDATA)>
-        <!ELEMENT value (#PCDATA)>
-        ]`,
+<!ELEMENT tree (branch)+>
+<!ELEMENT branch (node)+>
+<!ELEMENT node (path_segment,parent_path_segment?,value?)>
+<!ELEMENT path_segment (#PCDATA)>
+<!ELEMENT parent_path_segment (#PCDATA)>
+<!ELEMENT value (#PCDATA)>
+]`,
       tree: {
         branch: {
           node: [
@@ -36,9 +36,19 @@ const ExportButton: React.FC<IProps> = ({ nodes, name, baseName }) => {
       },
     };
 
-    const fileText = new Blob([js2xml(data, { compact: true })], {
-      type: "application/xml;charset=utf-8",
-    });
+    const fileText = new Blob(
+      [
+        js2xml(data, {
+          compact: true,
+          fullTagEmptyElement: true,
+          indentAttributes: true,
+          spaces: 2,
+        }),
+      ],
+      {
+        type: "application/xml;charset=utf-8",
+      }
+    );
 
     saveAs(fileText, `DP_${name.replace(" ", "_")}.xml`);
   };
