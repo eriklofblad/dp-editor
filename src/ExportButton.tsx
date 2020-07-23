@@ -14,8 +14,8 @@ const ExportButton: React.FC<IProps> = ({ nodes, name, baseName }) => {
     const data = {
       _declaration: {
         _attributes: {
-          encoding: "UTF-8",
           version: "1.0",
+          encoding: "UTF-8",
         },
       },
       _doctype: `tree [
